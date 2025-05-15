@@ -5,163 +5,486 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TaskAssigner | Dashboard</title>
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="../css/index.css" />
     <link
       rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
+    <link rel="stylesheet" href="src/css/index.css" />
   </head>
   <body>
-    <!-- window controls -->
-    <div class="window-controls">
-      <button id="minimize-btn" title="Minimize">─</button>
-      <button id="maximize-btn" title="Maximize">□</button>
-      <button id="close-btn" title="Close">✕</button>
-    </div>
-    <div class="container">
-      <!-- Sidebar -->
-      <div class="sidebar">
-        <div class="logo">TaskAssigner</div>
-        <a href="#" class="nav-item active" data-page="index.html">
-          <i class="fas fa-tachometer-alt"></i> Dashboard
-        </a>
-        <a href="#" class="nav-item" data-page="calendar.html">
-          <i class="fas fa-calendar"></i> Calendar
-        </a>
-        <a href="#" class="nav-item" data-page="report.html">
-          <i class="fas fa-chart-bar"></i> Reports
-        </a>
-        <a href="#" class="nav-item" data-page="setting.html">
-          <i class="fas fa-cog"></i> Settings
-        </a>
-      </div>
+    <div class="app-container">
+      <!-- Main App Layout -->
+      <div class="app-layout">
+        <!-- Glassmorphism Sidebar -->
+        <div class="sidebar">
+          <div class="logo-container">
+            <div class="logo">TaskAssigner</div>
+            <div class="logo-icon"><i class="fas fa-tasks"></i></div>
+          </div>
 
-      <!-- Main Content -->
-      <div class="main-content">
-        <div class="header">
-          <h1 class="page-title" id="pageTitle">Dashboard</h1>
+          <nav class="nav-menu">
+            <a href="#" class="nav-item active" data-page="index.html">
+              <div class="nav-icon"><i class="fas fa-tachometer-alt"></i></div>
+              <span>Dashboard</span>
+              <div class="active-indicator"></div>
+            </a>
+            <a href="#" class="nav-item" data-page="calendar.html">
+              <div class="nav-icon"><i class="fas fa-calendar"></i></div>
+              <span>Calendar</span>
+            </a>
+            <a href="#" class="nav-item" data-page="report.html">
+              <div class="nav-icon"><i class="fas fa-chart-bar"></i></div>
+              <span>Reports</span>
+            </a>
+            <a href="#" class="nav-item" data-page="setting.html">
+              <div class="nav-icon"><i class="fas fa-cog"></i></div>
+              <span>Settings</span>
+            </a>
+          </nav>
+
           <div class="user-profile">
-            <p>Hi,<span id="usernameDisplay"></span></p>
-            <div class="user-avatar" id="userAvatar"></div>
-          </div>
-        </div>
-
-        <!-- Dashboard Cards -->
-        <div class="dashboard-cards">
-          <div class="card">
-            <div class="card-title">Total Tasks</div>
-            <div class="card-value" id="totalTasksVal"></div>
-            <div class="card-change" id="totalTasksChange"></div>
-          </div>
-          <div class="card">
-            <div class="card-title">Completed</div>
-            <div class="card-value" id="completedTasksVal"></div>
-            <div class="card-change" id="completedTasksChange"></div>
-          </div>
-          <div class="card">
-            <div class="card-title">In Progress</div>
-            <div class="card-value" id="inProgressTasksVal"></div>
-            <div class="card-change negative" id="inProgressTasksChange"></div>
-          </div>
-          <div class="card">
-            <div class="card-title">Overdue</div>
-            <div class="card-value" id="overdueTasksVal"></div>
-            <div class="card-change negative" id="overdueTasksChange"></div>
-          </div>
-        </div>
-
-        <!-- Task Sections -->
-        <div class="task-sections">
-          <!-- My Tasks Section -->
-          <div class="task-list" id="myTasksList">
-            <h2 class="section-title">
+            <div class="user-avatar" id="userAvatar">
               <i class="fas fa-user"></i>
-              Task List
-            </h2>
+            </div>
+            <div class="user-info">
+              <p class="greeting">Hi there,</p>
+              <p class="username" id="usernameDisplay">User</p>
+            </div>
+          </div>
+        </div>
 
-            <button class="add-task-btn" id="addTaskBtn">
-              <i class="fas fa-plus"></i>
-              Add Task
+        <!-- Main Content Area -->
+        <div class="main-content">
+          <!-- Header -->
+          <header class="content-header">
+            <h1 class="page-title" id="pageTitle">Dashboard Overview</h1>
+            <div class="header-actions">
+              <button class="action-btn notification">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge">3</span>
+              </button>
+              <button class="action-btn quick-add">
+                <i class="fas fa-plus"></i> Quick Task
+              </button>
+            </div>
+          </header>
+
+          <!-- Stats Cards -->
+          <div class="stats-grid">
+            <div class="stat-card total-tasks">
+              <div class="card-icon">
+                <i class="fas fa-tasks"></i>
+              </div>
+              <div class="card-content">
+                <h3>Total Tasks</h3>
+                <p class="card-value" id="totalTasksVal">24</p>
+                <p class="card-change positive" id="totalTasksChange">
+                  <i class="fas fa-arrow-up"></i> 12%
+                </p>
+              </div>
+            </div>
+
+            <div class="stat-card completed">
+              <div class="card-icon">
+                <i class="fas fa-check-circle"></i>
+              </div>
+              <div class="card-content">
+                <h3>Completed</h3>
+                <p class="card-value" id="completedTasksVal">18</p>
+                <p class="card-change positive" id="completedTasksChange">
+                  <i class="fas fa-arrow-up"></i> 5%
+                </p>
+              </div>
+            </div>
+
+            <div class="stat-card in-progress">
+              <div class="card-icon">
+                <i class="fas fa-spinner"></i>
+              </div>
+              <div class="card-content">
+                <h3>In Progress</h3>
+                <p class="card-value" id="inProgressTasksVal">4</p>
+                <p class="card-change negative" id="inProgressTasksChange">
+                  <i class="fas fa-arrow-down"></i> 2%
+                </p>
+              </div>
+            </div>
+
+            <div class="stat-card overdue">
+              <div class="card-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+              </div>
+              <div class="card-content">
+                <h3>Overdue</h3>
+                <p class="card-value" id="overdueTasksVal">2</p>
+                <p class="card-change negative" id="overdueTasksChange">
+                  <i class="fas fa-arrow-up"></i> 1%
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Task Sections -->
+          <div class="task-sections">
+            <!-- Active Tasks -->
+            <div class="task-list active-tasks">
+              <div class="task-list-header">
+                <h2>
+                  <i class="fas fa-clipboard-list"></i>
+                  My Tasks
+                </h2>
+                <button class="add-task-btn" id="addTaskBtn">
+                  <i class="fas fa-plus"></i> Add Task
+                </button>
+              </div>
+              <div class="task-items" id="myTasksList">
+                <!-- Tasks will be dynamically inserted here -->
+              </div>
+            </div>
+
+            <!-- Completed Tasks -->
+            <div class="task-list completed-tasks">
+              <div class="task-list-header">
+                <h2>
+                  <i class="fas fa-check-circle"></i>
+                  Completed
+                </h2>
+                <button class="add-task-btn" id="assignTaskBtn">
+                  <i class="fas fa-ellipsis-v"></i>
+                </button>
+              </div>
+              <div class="task-items" id="teamTasksList">
+                <!-- Completed tasks will be dynamically inserted here -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Task Modal -->
+      <div class="modal-overlay" id="taskModal">
+        <div class="modal-container">
+          <div class="modal-header">
+            <h3 id="modalTitle">Create New Task</h3>
+            <button class="modal-close" id="closeModal">
+              <i class="fas fa-times"></i>
             </button>
           </div>
 
-          <!-- Done Task Section -->
-          <div class="task-list" id="teamTasksList">
-            <h2 class="section-title">
-              <i class="fas fa-check-circle"></i>
-              Done Task
-            </h2>
+          <form id="taskForm" class="modal-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Task Title</label>
+                <input
+                  type="text"
+                  placeholder="Enter task title"
+                  class="form-input"
+                />
+              </div>
 
-            <button class="add-task-btn" id="assignTaskBtn">
-              <i class="fas fa-plus"></i>
+              <div class="form-group">
+                <label>Priority</label>
+                <div class="priority-selector">
+                  <button type="button" class="priority-option low active">
+                    Low
+                  </button>
+                  <button type="button" class="priority-option medium">
+                    Medium
+                  </button>
+                  <button type="button" class="priority-option high">
+                    High
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Description</label>
+              <textarea
+                rows="3"
+                placeholder="Enter task description"
+                class="form-textarea"
+              ></textarea>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>Start Time</label>
+                <input type="time" id="startTime" class="form-input" />
+              </div>
+
+              <div class="form-group">
+                <label>End Time</label>
+                <input type="time" id="endTime" class="form-input" />
+              </div>
+
+              <div class="form-group">
+                <label>Due Date</label>
+                <input type="date" id="taskDueDateInput" class="form-input" />
+              </div>
+            </div>
+
+            <button type="submit" class="submit-btn">
+              <i class="fas fa-plus"></i> Create Task
             </button>
-          </div>
+          </form>
         </div>
       </div>
     </div>
 
-    <!-- Assign Task Modal -->
-    <div class="modal-overlay" id="taskModal">
-      <div class="modal">
-        <div class="modal-header">
-          <h3 class="modal-title" id="modalTitle">Assign New Task</h3>
-          <button class="close-btn" id="closeModal">&times;</button>
+    <script src="../js/index.js"></script>
+  </body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TaskAssigner | Dashboard</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="../css/index.css" />
+  </head>
+  <body>
+    <div class="app-container">
+      <!-- Window Controls -->
+      <div class="window-controls">
+        <button id="minimize-btn" class="control-btn" title="Minimize">
+          <i class="fas fa-minus"></i>
+        </button>
+        <button id="maximize-btn" class="control-btn" title="Maximize">
+          <i class="far fa-square"></i>
+        </button>
+        <button id="close-btn" class="control-btn close" title="Close">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <!-- Main App Layout -->
+      <div class="app-layout">
+        <!-- Glassmorphism Sidebar -->
+        <div class="sidebar">
+          <div class="logo-container">
+            <div class="logo">TaskAssigner</div>
+            <div class="logo-icon"><i class="fas fa-tasks"></i></div>
+          </div>
+
+          <nav class="nav-menu">
+            <a href="#" class="nav-item active" data-page="index.html">
+              <div class="nav-icon"><i class="fas fa-tachometer-alt"></i></div>
+              <span>Dashboard</span>
+              <div class="active-indicator"></div>
+            </a>
+            <a href="#" class="nav-item" data-page="calendar.html">
+              <div class="nav-icon"><i class="fas fa-calendar"></i></div>
+              <span>Calendar</span>
+            </a>
+            <a href="#" class="nav-item" data-page="report.html">
+              <div class="nav-icon"><i class="fas fa-chart-bar"></i></div>
+              <span>Reports</span>
+            </a>
+            <a href="#" class="nav-item" data-page="setting.html">
+              <div class="nav-icon"><i class="fas fa-cog"></i></div>
+              <span>Settings</span>
+            </a>
+          </nav>
+
+          <div class="user-profile">
+            <div class="user-avatar" id="userAvatar">
+              <i class="fas fa-user"></i>
+            </div>
+            <div class="user-info">
+              <p class="greeting">Hi there,</p>
+              <p class="username" id="usernameDisplay">User</p>
+            </div>
+          </div>
         </div>
-        <form id="taskForm">
-          <div class="form-group">
-            <label class="form-label">Task Title</label>
-            <input
-              type="text"
-              class="form-control"
-              placeholder="Enter task title"
-            />
+
+        <!-- Main Content Area -->
+        <div class="main-content">
+          <!-- Header -->
+          <header class="content-header">
+            <h1 class="page-title" id="pageTitle">Dashboard Overview</h1>
+            <div class="header-actions">
+              <button class="action-btn notification">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge">3</span>
+              </button>
+              <button class="action-btn quick-add">
+                <i class="fas fa-plus"></i> Quick Task
+              </button>
+            </div>
+          </header>
+
+          <!-- Stats Cards -->
+          <div class="stats-grid">
+            <div class="stat-card total-tasks">
+              <div class="card-icon">
+                <i class="fas fa-tasks"></i>
+              </div>
+              <div class="card-content">
+                <h3>Total Tasks</h3>
+                <p class="card-value" id="totalTasksVal">24</p>
+                <p class="card-change positive" id="totalTasksChange">
+                  <i class="fas fa-arrow-up"></i> 12%
+                </p>
+              </div>
+            </div>
+
+            <div class="stat-card completed">
+              <div class="card-icon">
+                <i class="fas fa-check-circle"></i>
+              </div>
+              <div class="card-content">
+                <h3>Completed</h3>
+                <p class="card-value" id="completedTasksVal">18</p>
+                <p class="card-change positive" id="completedTasksChange">
+                  <i class="fas fa-arrow-up"></i> 5%
+                </p>
+              </div>
+            </div>
+
+            <div class="stat-card in-progress">
+              <div class="card-icon">
+                <i class="fas fa-spinner"></i>
+              </div>
+              <div class="card-content">
+                <h3>In Progress</h3>
+                <p class="card-value" id="inProgressTasksVal">4</p>
+                <p class="card-change negative" id="inProgressTasksChange">
+                  <i class="fas fa-arrow-down"></i> 2%
+                </p>
+              </div>
+            </div>
+
+            <div class="stat-card overdue">
+              <div class="card-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+              </div>
+              <div class="card-content">
+                <h3>Overdue</h3>
+                <p class="card-value" id="overdueTasksVal">2</p>
+                <p class="card-change negative" id="overdueTasksChange">
+                  <i class="fas fa-arrow-up"></i> 1%
+                </p>
+              </div>
+            </div>
           </div>
 
-          <div class="form-group">
-            <label class="form-label">Task timing</label>
-            <input
-              type="time"
-              id="startTime"
-              class="form-control"
-              placeholder="Enter task timing"
-              required
-            />
-            <span class="work-hours-separator">:</span>
-            <input
-              type="time"
-              id="endTime"
-              class="form-control"
-              placeholder="Enter task timing"
-              required
-            />
+          <!-- Task Sections -->
+          <div class="task-sections">
+            <!-- Active Tasks -->
+            <div class="task-list active-tasks">
+              <div class="task-list-header">
+                <h2>
+                  <i class="fas fa-clipboard-list"></i>
+                  My Tasks
+                </h2>
+                <button class="add-task-btn" id="addTaskBtn">
+                  <i class="fas fa-plus"></i> Add Task
+                </button>
+              </div>
+              <div class="task-items" id="myTasksList">
+                <!-- Tasks will be dynamically inserted here -->
+              </div>
+            </div>
+
+            <!-- Completed Tasks -->
+            <div class="task-list completed-tasks">
+              <div class="task-list-header">
+                <h2>
+                  <i class="fas fa-check-circle"></i>
+                  Completed
+                </h2>
+                <button class="add-task-btn" id="assignTaskBtn">
+                  <i class="fas fa-ellipsis-v"></i>
+                </button>
+              </div>
+              <div class="task-items" id="teamTasksList">
+                <!-- Completed tasks will be dynamically inserted here -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Task Modal -->
+      <div class="modal-overlay" id="taskModal">
+        <div class="modal-container">
+          <div class="modal-header">
+            <h3 id="modalTitle">Create New Task</h3>
+            <button class="modal-close" id="closeModal">
+              <i class="fas fa-times"></i>
+            </button>
           </div>
 
-          <div class="form-group">
-            <label class="form-label">Description</label>
-            <textarea
-              class="form-control"
-              rows="3"
-              placeholder="Enter task description"
-            ></textarea>
-          </div>
+          <form id="taskForm" class="modal-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Task Title</label>
+                <input
+                  type="text"
+                  placeholder="Enter task title"
+                  class="form-input"
+                />
+              </div>
 
-          <div class="form-group">
-            <label class="form-label">Due Date</label>
-            <input type="date" id="taskDueDateInput" class="form-control" />
-          </div>
-          <div class="form-group">
-            <label class="form-label">Priority</label>
-            <select class="form-select">
-              <option>Low</option>
-              <option>Medium</option>
-              <option>High</option>
-            </select>
-          </div>
-          <button type="submit" class="submit-btn">Assign Task</button>
-        </form>
+              <div class="form-group">
+                <label>Priority</label>
+                <div class="priority-selector">
+                  <button type="button" class="priority-option low active">
+                    Low
+                  </button>
+                  <button type="button" class="priority-option medium">
+                    Medium
+                  </button>
+                  <button type="button" class="priority-option high">
+                    High
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Description</label>
+              <textarea
+                rows="3"
+                placeholder="Enter task description"
+                class="form-textarea"
+              ></textarea>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>Start Time</label>
+                <input type="time" id="startTime" class="form-input" />
+              </div>
+
+              <div class="form-group">
+                <label>End Time</label>
+                <input type="time" id="endTime" class="form-input" />
+              </div>
+
+              <div class="form-group">
+                <label>Due Date</label>
+                <input type="date" id="taskDueDateInput" class="form-input" />
+              </div>
+            </div>
+
+            <button type="submit" class="submit-btn">
+              <i class="fas fa-plus"></i> Create Task
+            </button>
+          </form>
+        </div>
       </div>
     </div>
 

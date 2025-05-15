@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TaskAssigner | Dashboard</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../css/index.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+  </head>
+  <body>
+    <!-- window controls -->
+    <div class="window-controls">
+      <button id="minimize-btn" title="Minimize">─</button>
+      <button id="maximize-btn" title="Maximize">□</button>
+      <button id="close-btn" title="Close">✕</button>
+    </div>
+    <div class="container">
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <div class="logo">TaskAssigner</div>
+        <a href="#" class="nav-item active" data-page="index.html">
+          <i class="fas fa-tachometer-alt"></i> Dashboard
+        </a>
+        <a href="#" class="nav-item" data-page="calendar.html">
+          <i class="fas fa-calendar"></i> Calendar
+        </a>
+        <a href="#" class="nav-item" data-page="report.html">
+          <i class="fas fa-chart-bar"></i> Reports
+        </a>
+        <a href="#" class="nav-item" data-page="setting.html">
+          <i class="fas fa-cog"></i> Settings
+        </a>
+      </div>
+
+      <!-- Main Content -->
+      <div class="main-content">
+        <div class="header">
+          <h1 class="page-title" id="pageTitle">Dashboard</h1>
+          <div class="user-profile">
+            <p>Hi,<span id="usernameDisplay"></span></p>
+            <div class="user-avatar" id="userAvatar"></div>
+          </div>
+        </div>
+
+        <!-- Dashboard Cards -->
+        <div class="dashboard-cards">
+          <div class="card">
+            <div class="card-title">Total Tasks</div>
+            <div class="card-value" id="totalTasksVal"></div>
+            <div class="card-change" id="totalTasksChange"></div>
+          </div>
+          <div class="card">
+            <div class="card-title">Completed</div>
+            <div class="card-value" id="completedTasksVal"></div>
+            <div class="card-change" id="completedTasksChange"></div>
+          </div>
+          <div class="card">
+            <div class="card-title">In Progress</div>
+            <div class="card-value" id="inProgressTasksVal"></div>
+            <div class="card-change negative" id="inProgressTasksChange"></div>
+          </div>
+          <div class="card">
+            <div class="card-title">Overdue</div>
+            <div class="card-value" id="overdueTasksVal"></div>
+            <div class="card-change negative" id="overdueTasksChange"></div>
+          </div>
+        </div>
+
+        <!-- Task Sections -->
+        <div class="task-sections">
+          <!-- My Tasks Section -->
+          <div class="task-list" id="myTasksList">
+            <h2 class="section-title">
+              <i class="fas fa-user"></i>
+              Task List
+            </h2>
+
+            <button class="add-task-btn" id="addTaskBtn">
+              <i class="fas fa-plus"></i>
+              Add Task
+            </button>
+          </div>
+
+          <!-- Done Task Section -->
+          <div class="task-list" id="teamTasksList">
+            <h2 class="section-title">
+              <i class="fas fa-check-circle"></i>
+              Done Task
+            </h2>
+
+            <button class="add-task-btn" id="assignTaskBtn">
+              <i class="fas fa-plus"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Assign Task Modal -->
+    <div class="modal-overlay" id="taskModal">
+      <div class="modal">
+        <div class="modal-header">
+          <h3 class="modal-title" id="modalTitle">Assign New Task</h3>
+          <button class="close-btn" id="closeModal">&times;</button>
+        </div>
+        <form id="taskForm">
+          <div class="form-group">
+            <label class="form-label">Task Title</label>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Enter task title"
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Task timing</label>
+            <input
+              type="time"
+              id="startTime"
+              class="form-control"
+              placeholder="Enter task timing"
+              required
+            />
+            <span class="work-hours-separator">:</span>
+            <input
+              type="time"
+              id="endTime"
+              class="form-control"
+              placeholder="Enter task timing"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Description</label>
+            <textarea
+              class="form-control"
+              rows="3"
+              placeholder="Enter task description"
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Due Date</label>
+            <input type="date" id="taskDueDateInput" class="form-control" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Priority</label>
+            <select class="form-select">
+              <option>Low</option>
+              <option>Medium</option>
+              <option>High</option>
+            </select>
+          </div>
+          <button type="submit" class="submit-btn">Assign Task</button>
+        </form>
+      </div>
+    </div>
+
+    <script src="../js/index.js"></script>
+  </body>
+</html>

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TaskAssigner | Dashboard</title>
+    <title>SyncForge | Setting</title>
     <link
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
@@ -21,15 +21,14 @@
         <!--Sidebar -->
         <div class="sidebar">
           <div class="logo-container">
-            <div class="logo">TaskAssigner</div>
+            <div class="logo">SyncForge</div>
             <div class="logo-icon"><i class="fas fa-tasks"></i></div>
           </div>
 
           <nav class="nav-menu">
-            <a href="#" class="nav-item active" data-page="index.html">
+            <a href="#" class="nav-item" data-page="index.html">
               <div class="nav-icon"><i class="fas fa-tachometer-alt"></i></div>
               <span>Dashboard</span>
-              <div class="active-indicator"></div>
             </a>
             <a href="#" class="nav-item" data-page="history.html">
               <div class="nav-icon"><i class="fas fa-history"></i></div>
@@ -37,11 +36,12 @@
             </a>
             <a href="#" class="nav-item" data-page="report.html">
               <div class="nav-icon"><i class="fas fa-chart-bar"></i></div>
-              <span>Reports</span>
+              <span>Report</span>
             </a>
-            <a href="#" class="nav-item" data-page="setting.html">
+            <a href="#" class="nav-item active" data-page="setting.html">
               <div class="nav-icon"><i class="fas fa-cog"></i></div>
-              <span>Settings</span>
+              <span>Setting</span>
+              <div class="active-indicator"></div>
             </a>
           </nav>
 
@@ -57,6 +57,25 @@
         </div>
 
         <!-- Main Content Area -->
+        <div class="main-content">
+          <!-- Header -->
+          <header class="content-header">
+            <h1 class="page-title" id="pageTitle"></h1>
+            <div class="header-actions">
+              <button class="action-btn notification">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge" id="notifybell"></span>
+              </button>
+              <button class="action-btn quick-add">
+                <i class="fas fa-plus"></i> Quick Task
+              </button>
+            </div>
+          </header>
+
+          <!-- Setting Content Area -->
+        </div>
+
+        <!--  -->
       </div>
     </div>
     <script src="../js/setting.js"></script>

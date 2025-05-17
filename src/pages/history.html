@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SyncForge | History</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="../css/history.css" />
+  </head>
+  <body>
+    <div class="app-container">
+      <!-- Main App Layout -->
+      <div class="app-layout">
+        <!--Sidebar -->
+        <div class="sidebar">
+          <div class="logo-container">
+            <div class="logo">SyncForge</div>
+            <div class="logo-icon"><i class="fas fa-tasks"></i></div>
+          </div>
+
+          <nav class="nav-menu">
+            <a href="#" class="nav-item" data-page="index.html">
+              <div class="nav-icon"><i class="fas fa-tachometer-alt"></i></div>
+              <span>Dashboard</span>
+            </a>
+            <a href="#" class="nav-item active" data-page="history.html">
+              <div class="nav-icon"><i class="fas fa-history"></i></div>
+              <span>History</span>
+              <div class="active-indicator"></div>
+            </a>
+            <a href="#" class="nav-item" data-page="report.html">
+              <div class="nav-icon"><i class="fas fa-chart-bar"></i></div>
+              <span>Report</span>
+            </a>
+            <a href="#" class="nav-item" data-page="setting.html">
+              <div class="nav-icon"><i class="fas fa-cog"></i></div>
+              <span>Setting</span>
+            </a>
+          </nav>
+
+          <div class="user-profile">
+            <div class="user-avatar" id="userAvatar">
+              <i class="fas fa-user"></i>
+            </div>
+            <div class="user-info">
+              <p class="greeting">Hi there,</p>
+              <p class="username" id="usernameDisplay"></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="main-content">
+          <!-- Header -->
+          <header class="content-header">
+            <h1 class="page-title" id="pageTitle"></h1>
+            <div class="header-actions">
+              <button class="action-btn notification">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge" id="notifybell"></span>
+              </button>
+              <button class="action-btn quick-add">
+                <i class="fas fa-plus"></i> Quick Task
+              </button>
+            </div>
+          </header>
+
+          <!-- Stats Cards -->
+          <div class="stats-grid">
+            <div class="stat-card total-tasks">
+              <div class="card-icon">
+                <i class="fas fa-tasks"></i>
+              </div>
+              <div class="card-content">
+                <h3>Total Tasks</h3>
+                <p class="card-value" id="totalTasksVal"></p>
+                <p class="card-change" id="totalTasksChange"></p>
+              </div>
+            </div>
+
+            <div class="stat-card completed">
+              <div class="card-icon">
+                <i class="fas fa-check-circle"></i>
+              </div>
+              <div class="card-content">
+                <h3>Completed</h3>
+                <p class="card-value" id="completedTasksVal"></p>
+                <p class="card-change" id="completedTasksChange"></p>
+              </div>
+            </div>
+
+            <div class="stat-card in-progress">
+              <div class="card-icon">
+                <i class="fas fa-spinner"></i>
+              </div>
+              <div class="card-content">
+                <h3>In Progress</h3>
+                <p class="card-value" id="inProgressTasksVal"></p>
+                <p class="card-change" id="inProgressTasksChange"></p>
+              </div>
+            </div>
+
+            <div class="stat-card overdue">
+              <div class="card-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+              </div>
+              <div class="card-content">
+                <h3>Overdue</h3>
+                <p class="card-value" id="overdueTasksVal"></p>
+                <p class="card-change" id="overdueTasksChange"></p>
+              </div>
+            </div>
+          </div>
+
+          <!-- History Content Area -->
+        </div>
+
+        <!--  -->
+      </div>
+    </div>
+    <script src="../js/history.js"></script>
+  </body>
+</html>

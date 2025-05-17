@@ -1,12 +1,11 @@
 {
   "name": "syncforge",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview",
-    "deploy": "gh-pages -d dist"
+    "start": "node src/app.js",
+    "build": "echo 'Build script not defined'",
+    "test": "echo 'Test script not defined'"
   },
   "repository": {
     "type": "git",
@@ -18,9 +17,12 @@
     "url": "https://github.com/Varun-Singh-Rana/SyncForge/issues"
   },
   "homepage": "https://github.com/Varun-Singh-Rana/SyncForge#readme",
-  "description": "",
+  "description": "A web application hosted using Docker.",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
   "devDependencies": {
-    "gh-pages": "^6.3.0"
+    "nodemon": "^2.0.7"
   },
   "build": {
     "appId": "com.example.task-scheduler-pro",

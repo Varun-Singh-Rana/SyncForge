@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TaskAssigner | Dashboard</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="../css/setting.css" />
+  </head>
+  <body>
+    <div class="app-container">
+      <!-- Main App Layout -->
+      <div class="app-layout">
+        <!--Sidebar -->
+        <div class="sidebar">
+          <div class="logo-container">
+            <div class="logo">TaskAssigner</div>
+            <div class="logo-icon"><i class="fas fa-tasks"></i></div>
+          </div>
+
+          <nav class="nav-menu">
+            <a href="#" class="nav-item active" data-page="index.html">
+              <div class="nav-icon"><i class="fas fa-tachometer-alt"></i></div>
+              <span>Dashboard</span>
+              <div class="active-indicator"></div>
+            </a>
+            <a href="#" class="nav-item" data-page="history.html">
+              <div class="nav-icon"><i class="fas fa-history"></i></div>
+              <span>History</span>
+            </a>
+            <a href="#" class="nav-item" data-page="report.html">
+              <div class="nav-icon"><i class="fas fa-chart-bar"></i></div>
+              <span>Reports</span>
+            </a>
+            <a href="#" class="nav-item" data-page="setting.html">
+              <div class="nav-icon"><i class="fas fa-cog"></i></div>
+              <span>Settings</span>
+            </a>
+          </nav>
+
+          <div class="user-profile">
+            <div class="user-avatar" id="userAvatar">
+              <i class="fas fa-user"></i>
+            </div>
+            <div class="user-info">
+              <p class="greeting">Hi there,</p>
+              <p class="username" id="usernameDisplay"></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main Content Area -->
+      </div>
+    </div>
+    <script src="../js/setting.js"></script>
+  </body>
+</html>

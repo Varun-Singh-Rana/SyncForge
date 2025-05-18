@@ -1,0 +1,125 @@
+:root {
+  --primary: #6c5ce7;
+  --primary-light: #a29bfe;
+  --secondary: #00b894;
+  --accent: #fd79a8;
+  --warning: #fdcb6e;
+  --danger: #e17055;
+  --dark: #2d3436;
+  --light: #f5f6fa;
+  --glass-bg: rgba(255, 255, 255, 0.15);
+  --glass-border: rgba(255, 255, 255, 0.18);
+  --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+  --border-radius: 12px;
+  --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* --- Base Styles --- */
+body {
+  font-family: "Poppins", sans-serif;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  color: var(--dark);
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 400px;
+  margin: 60px auto;
+  background: var(--glass-bg);
+  border-radius: var(--border-radius);
+  box-shadow: var(--glass-shadow);
+  padding: 2.5rem 2rem 2rem 2rem;
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(10px);
+}
+
+h1 {
+  text-align: center;
+  color: #6c5ce7;
+  font-size: 2.2rem;
+  font-weight: 600;
+  margin-bottom: 32px;
+  letter-spacing: 0.5px;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  /* align-items: flex-start; */
+}
+
+.form-control {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 14px;
+  border: 1px solid #dbeafe;
+  border-radius: 6px;
+  font-size: 1rem;
+  background: #f8fafc;
+  transition: border 0.2s;
+}
+
+form#userInfoForm {
+  width: 100%;
+}
+.form-control:focus {
+  border-color: var(--primary);
+  outline: none;
+}
+
+.btn {
+  width: 180px;
+  margin: 18px auto 0 auto;
+  display: block;
+  padding: 12px 0;
+  background: #6c5ce7;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 1.08rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn:hover {
+  background: #a29bfe;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .container {
+    padding: 1.2rem 0.5rem;
+    margin: 20px 5px;
+  }
+  h1 {
+    font-size: 1.3rem;
+  }
+}
+
+.error-message {
+  color: var(--danger-color);
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+}
+
+input.error {
+  border-color: var(--danger-color);
+}
+
+input.success {
+  border-color: var(--success-color);
+}
+
+/* Center the form and give it a card look */
+.container {
+  max-width: 700px;
+  margin: 40px auto;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 4px 24px rgba(30, 34, 90, 0.08);
+  padding: 40px 36px 32px 36px;
+}

@@ -21,6 +21,130 @@
   --spacing-xl: 2rem;
 }
 
+/* Calendar Styles */
+.calendar-section {
+  display: flex;
+  gap: 32px;
+  margin-top: 32px;
+  width: 100%;
+  align-items: flex-start;
+}
+
+.calendar-panel {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px #0001;
+  padding: 18px 18px 12px 18px;
+}
+
+.calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 8px;
+  font-size: 1.2em;
+  font-weight: 500;
+}
+
+#calendarMonthYear {
+  min-width: 120px;
+  text-align: center;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 48px);
+  gap: 8px;
+  background: #fff;
+  padding: 18px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px #0001;
+  margin-top: 8px;
+}
+
+.calendar-day,
+.calendar-day.inactive {
+  width: 48px;
+  height: 48px;
+  font-size: 1.1em;
+}
+
+.calendar-day {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background 0.2s;
+  position: relative;
+  font-weight: 500;
+}
+
+.calendar-day:not(.inactive):hover {
+  background: #f1f5ff;
+  border: 1.5px solid #4cc9f0;
+  box-shadow: 0 2px 8px #4cc9f033;
+}
+
+.calendar-day.selected {
+  background: #e0e7ff;
+  border: 2px solid #4361ee;
+  box-shadow: 0 2px 8px #4361ee22;
+}
+
+.calendar-day.inactive {
+  color: #bbb;
+  background: #f6f6f6;
+  cursor: default;
+}
+
+.calendar-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-top: 4px;
+  display: inline-block;
+}
+
+.calendar-dot-green {
+  background: #43e97b;
+}
+.calendar-dot-blue {
+  background: #4cc9f0;
+}
+.calendar-dot-gray {
+  background: #bdbdbd;
+}
+
+.day-tasks-panel {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px #0001;
+  padding: 18px 24px;
+  min-width: 260px;
+  margin-left: 24px;
+}
+
+.calendar-header button {
+  background: #f1f5ff;
+  border: none;
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 1.1em;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.calendar-header button:hover {
+  background: #4cc9f0;
+  color: #fff;
+}
+
 /* Base Styles */
 body {
   font-family: "Poppins", sans-serif;

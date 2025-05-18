@@ -1,35 +1,29 @@
 {
-  "name": "syncforge",
+  "name": "project_syncforge",
   "version": "1.0.0",
   "main": "main.js",
   "scripts": {
-    "start": "node src/app.js",
-    "build": "echo 'Build script not defined'",
-    "test": "echo 'Test script not defined'"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Varun-Singh-Rana/SyncForge.git"
   },
-  "author": "Varun Singh Rana",
-  "license": "Apache-2.0",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "bugs": {
     "url": "https://github.com/Varun-Singh-Rana/SyncForge/issues"
   },
   "homepage": "https://github.com/Varun-Singh-Rana/SyncForge#readme",
-  "description": "A web application hosted using Docker.",
+  "description": "",
   "dependencies": {
-    "express": "^4.17.1"
-  },
-  "devDependencies": {
-    "nodemon": "^2.0.7"
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "mongoose": "^8.15.0"
   },
   "build": {
-    "appId": "com.example.task-scheduler-pro",
-    "productName": "Smart Scheduler",
-    "directories": {
-      "output": "dist"
-    },
     "win": {
       "icon": "src/assets/logo.ico"
     }

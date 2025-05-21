@@ -3,6 +3,8 @@ const mongoose = require("mongoose");
 const app = express();
 app.use(express.json());
 
+app.use(express.static("src"));
+
 // Two connections
 const userInfoConn = mongoose.createConnection(
   "mongodb://localhost:27017/userinfo"
@@ -12,8 +14,8 @@ const userTaskConn = mongoose.createConnection(
 );
 
 // Import schemas
-const userSchema = require("models/user");
-const taskSchema = require("models/task");
+const userSchema = require("./models/user");
+const taskSchema = require("./models/task");
 
 // Create models
 const User = userInfoConn.model("user", userSchema);
@@ -26,14 +28,12 @@ app.get("/api/userinfo/status", async (req, res) => {
 });
 
 // Route to save user info
-app.post("/api/users", async (req, res) => {
+app.get("/api/users", async (req, res) => {
   try {
-    const { name, sleepTime, wakeUpTime } = req.body;
-    const user = new User({ name, sleepTime, wakeUpTime, stored: 1 });
-    await user.save();
-    res.status(201).json(user);
+    const users = await User.find();
+    res.json(users);
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    res.status(500).json({ error: err.message });
   }
 });
 

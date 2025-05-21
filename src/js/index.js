@@ -1,4 +1,42 @@
-// Example: Fetch or define your data here
+// ...existing code...
+
+async function fetchUserInfo() {
+  try {
+    const res = await fetch("/api/users");
+    const users = await res.json();
+    // If your API returns an array, pick the first user
+    if (Array.isArray(users) && users.length > 0) {
+      dashboardData.username = users[0].name || "User";
+    } else if (users.name) {
+      dashboardData.username = users.name;
+    }
+  } catch (e) {
+    dashboardData.username = "User";
+  }
+}
+
+async function fetchTasks() {
+  try {
+    const res = await fetch("/api/tasks");
+    const tasks = await res.json();
+    dashboardData.stats.totalTasks.value = tasks.length;
+    dashboardData.myTasks = tasks.filter((t) => !t.completed);
+    dashboardData.completedTasks = tasks.filter((t) => t.completed);
+    dashboardData.stats.completed.value = dashboardData.completedTasks.length;
+    dashboardData.stats.inProgress.value = dashboardData.myTasks.length;
+    // Add overdue logic if you have due dates
+    dashboardData.stats.overdue.value = tasks.filter((t) => t.overdue).length;
+  } catch (e) {
+    dashboardData.myTasks = [];
+    dashboardData.completedTasks = [];
+  }
+}
+
+async function loadData() {
+  await fetchUserInfo();
+  await fetchTasks();
+}
+
 const dashboardData = {
   username: "",
   pageTitle: "Dashboard Overview",
@@ -17,19 +55,6 @@ const dashboardData = {
 function setText(id, text) {
   const el = document.getElementById(id);
   if (el) el.textContent = text;
-}
-
-// Populate stats
-function populateStats() {
-  setText("totalTasksVal", dashboardData.stats.totalTasks.value);
-  setText("completedTasksVal", dashboardData.stats.completed.value);
-  setText("inProgressTasksVal", dashboardData.stats.inProgress.value);
-  setText("overdueTasksVal", dashboardData.stats.overdue.value);
-
-  setChange("totalTasksChange", dashboardData.stats.totalTasks);
-  setChange("completedTasksChange", dashboardData.stats.completed);
-  setChange("inProgressTasksChange", dashboardData.stats.inProgress);
-  setChange("overdueTasksChange", dashboardData.stats.overdue);
 }
 
 function setChange(id, stat) {
@@ -75,32 +100,18 @@ function populateTasks() {
   });
 }
 
-// Example: Load data (replace with real fetch or user input)
-function loadData() {
-  // Example: prompt for username if not set
-  if (!dashboardData.username) {
-    dashboardData.username = prompt("Enter your username:") || "User";
-  }
-  // Example: set stats and tasks (empty by default)
-  dashboardData.stats.totalTasks.value = "";
-  dashboardData.stats.totalTasks.change = "";
-  dashboardData.stats.completed.value = "";
-  dashboardData.stats.completed.change = "";
-  dashboardData.stats.inProgress.value = "";
-  dashboardData.stats.inProgress.change = "";
-  dashboardData.stats.overdue.value = "";
-  dashboardData.stats.overdue.change = "";
-
-  dashboardData.myTasks = [];
-  dashboardData.completedTasks = [];
+//
+async function loadData() {
+  await fetchUserInfo();
+  await fetchTasks();
 }
 
-// Initialize dashboard
 function initDashboard() {
-  loadData();
-  populateHeader();
-  populateStats();
-  populateTasks();
+  loadData().then(() => {
+    populateHeader();
+    populateStats();
+    populateTasks();
+  });
 }
 
 document.addEventListener("DOMContentLoaded", initDashboard);

@@ -25,5 +25,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   const data = await res.json();
   if (data.stored === 1) {
     document.querySelector(".container").innerHTML = "<h2>Welcome back!</h2>";
+    // After successful login
+    window.location.href = "/pages/index.html";
   }
 });

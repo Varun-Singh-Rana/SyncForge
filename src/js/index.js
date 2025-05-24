@@ -100,6 +100,74 @@ function populateTasks() {
   });
 }
 
+function showModal() {
+  document.getElementById("taskModal").classList.add("active");
+}
+function hideModal() {
+  document.getElementById("taskModal").classList.remove("active");
+}
+
+// Handle Add Task button (My Tasks)
+document.addEventListener("DOMContentLoaded", () => {
+  // Add Task button
+  const addTaskBtn = document.getElementById("addTaskBtn");
+  if (addTaskBtn) {
+    addTaskBtn.addEventListener("click", showModal);
+  }
+
+  // Quick Task button (header)
+  const quickTaskBtn = document.querySelector(".quick-add");
+  if (quickTaskBtn) {
+    quickTaskBtn.addEventListener("click", async () => {
+      const title = prompt("Quick Task Title:");
+      if (title) {
+        await fetch("/api/tasks", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ title, completed: false }),
+        });
+        await loadData();
+        populateTasks();
+        populateStats && populateStats();
+      }
+    });
+  }
+
+  // 3-dot button in Completed tab
+  const completedMenuBtn = document.getElementById("assignTaskBtn");
+  if (completedMenuBtn) {
+    completedMenuBtn.addEventListener("click", () => {
+      alert("Completed menu options coming soon!");
+    });
+  }
+
+  // Modal close
+  const closeModalBtn = document.getElementById("closeModal");
+  if (closeModalBtn) {
+    closeModalBtn.addEventListener("click", hideModal);
+  }
+
+  // Modal form submit
+  const taskForm = document.getElementById("taskForm");
+  if (taskForm) {
+    taskForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const title = taskForm.querySelector('input[type="text"]').value;
+      if (!title) return;
+      await fetch("/api/tasks", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title, completed: false }),
+      });
+      hideModal();
+      await loadData();
+      populateTasks();
+      populateStats && populateStats();
+      taskForm.reset();
+    });
+  }
+});
+
 //
 async function loadData() {
   await fetchUserInfo();

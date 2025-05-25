@@ -77,6 +77,36 @@
           </header>
 
           <!-- Setting Content Area -->
+          <h4>User Information</h4>
+          <form id="userInfoForm">
+            <div class="form-group">
+              <label for="name" class="form-label">Full Name:</label>
+              <input type="text" id="name" class="form-control" required />
+            </div>
+
+            <div class="form-group">
+              <label for="email" class="form-label">Email:</label>
+              <input type="email" id="email" class="form-control" required />
+            </div>
+
+            <div class="form-group">
+              <label for="sleepTime" class="form-label">Sleep Time:</label>
+              <input type="time" id="sleepTime" class="form-control" required />
+            </div>
+            <div class="form-group">
+              <label for="wakeUpTime" class="form-label">Wake Up Time:</label>
+              <input
+                type="time"
+                id="wakeUpTime"
+                class="form-control"
+                required
+              />
+            </div>
+
+            <button type="submit" class="btn">
+              <i class="fas fa-save"></i> Save Information
+            </button>
+          </form>
         </div>
 
         <!--  -->

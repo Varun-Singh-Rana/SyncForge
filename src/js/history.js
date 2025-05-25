@@ -1,5 +1,3 @@
-// ...existing code...
-
 async function fetchUserInfo() {
   try {
     const res = await fetch("/api/users");

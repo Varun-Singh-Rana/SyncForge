@@ -49,6 +49,18 @@ app.get("/api/users", async (req, res) => {
   }
 });
 
+// To update user info
+app.put("/api/users/:id", async (req, res) => {
+  try {
+    const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
+    res.json(updatedUser);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
 // To save user tasks
 app.post("/api/tasks", async (req, res) => {
   try {

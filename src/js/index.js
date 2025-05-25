@@ -79,22 +79,64 @@ function populateHeader() {
 // Populate tasks
 function populateTasks() {
   const myTasksList = document.getElementById("myTasksList");
-  const teamTasksList = document.getElementById("teamTasksList");
   myTasksList.innerHTML = "";
-  teamTasksList.innerHTML = "";
 
-  dashboardData.myTasks.forEach((task) => {
-    const div = document.createElement("div");
-    div.className = "task-item";
-    div.textContent = task.taskName;
-    myTasksList.appendChild(div);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const tomorrow = new Date(today);
+  tomorrow.setDate(today.getDate() + 1);
+
+  // Filter tasks for today and tomorrow
+  const filteredTasks = dashboardData.myTasks.filter((task) => {
+    const dueDate = new Date(task.dueDate);
+    dueDate.setHours(0, 0, 0, 0);
+    return (
+      dueDate.getTime() === today.getTime() ||
+      dueDate.getTime() === tomorrow.getTime()
+    );
   });
 
-  dashboardData.completedTasks.forEach((task) => {
+  if (filteredTasks.length === 0) {
+    myTasksList.innerHTML = `<div class="no-task-msg">No tasks for today or tomorrow.</div>`;
+    return;
+  }
+
+  filteredTasks.forEach((task) => {
+    const dueDate = new Date(task.dueDate);
+    let dueLabel = "";
+    const diffDays = Math.ceil((dueDate - today) / (1000 * 60 * 60 * 24));
+    if (diffDays === 1) dueLabel = "Due tomorrow";
+    else if (diffDays === 0) dueLabel = "Due today";
+
+    const priorityClass = task.priority ? task.priority.toLowerCase() : "low";
+    const timeRange =
+      task.taskTime && task.endTime
+        ? `${task.taskTime}–${task.endTime}`
+        : task.taskTime || "";
+
     const div = document.createElement("div");
-    div.className = "task-item completed";
-    div.textContent = task.taskName;
-    teamTasksList.appendChild(div);
+    div.className = "task-card";
+    div.innerHTML = `
+      <div class="task-header">
+        <span class="task-badge">${
+          dueLabel === "Due tomorrow" ? "Tomorrow's Task" : "Today's Task"
+        }</span>
+        <span class="task-priority ${priorityClass}">${task.priority}</span>
+      </div>
+      <div class="task-body">
+        <label class="task-checkbox">
+          <input type="checkbox" ${task.completed ? "checked" : ""} />
+        </label>
+        <div class="task-info">
+          <div class="task-title">${task.taskName}</div>
+          <div class="task-meta">
+            <span class="task-time"><i class="fas fa-clock"></i> ${timeRange}</span>
+            <span class="task-due"><i class="fas fa-calendar-alt"></i> ${dueLabel}</span>
+          </div>
+        </div>
+      </div>
+    `;
+    myTasksList.appendChild(div);
   });
 }
 

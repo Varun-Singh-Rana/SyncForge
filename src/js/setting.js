@@ -1,17 +1,42 @@
+let currentUserId = null;
+
 async function fetchUserInfo() {
-  try {
-    const res = await fetch("/api/users");
-    const users = await res.json();
-    // If your API returns an array, pick the first user
-    if (Array.isArray(users) && users.length > 0) {
-      dashboardData.username = users[0].name || "User";
-    } else if (users.name) {
-      dashboardData.username = users.name;
-    }
-  } catch (e) {
-    dashboardData.username = "User";
+  const res = await fetch("/api/users");
+  const users = await res.json();
+  let user = Array.isArray(users) ? users[0] : users;
+  if (user && user._id) {
+    currentUserId = user._id;
+    document.getElementById("name").value = user.name || "";
+    document.getElementById("email").value = user.email || "";
+    document.getElementById("sleepTime").value = user.sleepTime || "";
+    document.getElementById("wakeUpTime").value = user.wakeUpTime || "";
   }
 }
+
+document
+  .getElementById("userInfoForm")
+  .addEventListener("submit", async function (e) {
+    e.preventDefault();
+    const userData = {
+      name: document.getElementById("name").value,
+      email: document.getElementById("email").value,
+      sleepTime: document.getElementById("sleepTime").value,
+      wakeUpTime: document.getElementById("wakeUpTime").value,
+    };
+    if (currentUserId) {
+      // Update existing user
+      const response = await fetch(`/api/users/${currentUserId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(userData),
+      });
+      if (response.ok) {
+        alert("User info updated!");
+      } else {
+        alert("Failed to update user info.");
+      }
+    }
+  });
 
 const dashboardData = {
   username: "",

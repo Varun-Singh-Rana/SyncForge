@@ -27,7 +27,19 @@ app.get("/api/userinfo/status", async (req, res) => {
   res.json({ stored: user && user.stored === 1 ? 1 : 0 });
 });
 
-// Route to save user info
+// To save user info
+app.post("/api/users", async (req, res) => {
+  try {
+    const { name, email, sleepTime, wakeUpTime } = req.body;
+    const user = new User({ name, email, sleepTime, wakeUpTime, stored: 1 });
+    await user.save();
+    res.status(201).json(user);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// To get user info
 app.get("/api/users", async (req, res) => {
   try {
     const users = await User.find();
@@ -37,13 +49,25 @@ app.get("/api/users", async (req, res) => {
   }
 });
 
+// To save user tasks
 app.post("/api/tasks", async (req, res) => {
   try {
     const task = new Task(req.body);
     await task.save();
     res.status(201).json(task);
   } catch (err) {
+    console.error("Error saving task:", err);
     res.status(400).json({ error: err.message });
+  }
+});
+
+// Add this GET route to fetch all tasks
+app.get("/api/tasks", async (req, res) => {
+  try {
+    const tasks = await Task.find();
+    res.json(tasks);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 

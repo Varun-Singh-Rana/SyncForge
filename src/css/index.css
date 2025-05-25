@@ -456,11 +456,13 @@ body {
   display: flex;
   gap: var(--spacing-md);
   margin-bottom: var(--spacing-md);
+  flex-wrap: wrap;
 }
 
 .form-group {
   flex: 1;
   margin-bottom: var(--spacing-md);
+  min-width: 130px;
 }
 
 .form-group label {
@@ -479,6 +481,7 @@ body {
   border-radius: 8px;
   font-family: "Poppins", sans-serif;
   transition: border-color 0.3s ease;
+  box-sizing: border-box;
 }
 
 .form-input:focus,

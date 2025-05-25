@@ -1,5 +1,3 @@
-// ...existing code...
-
 async function fetchUserInfo() {
   try {
     const res = await fetch("/api/users");
@@ -88,14 +86,14 @@ function populateTasks() {
   dashboardData.myTasks.forEach((task) => {
     const div = document.createElement("div");
     div.className = "task-item";
-    div.textContent = task.title;
+    div.textContent = task.taskName;
     myTasksList.appendChild(div);
   });
 
   dashboardData.completedTasks.forEach((task) => {
     const div = document.createElement("div");
     div.className = "task-item completed";
-    div.textContent = task.title;
+    div.textContent = task.taskName;
     teamTasksList.appendChild(div);
   });
 }
@@ -106,6 +104,16 @@ function showModal() {
 function hideModal() {
   document.getElementById("taskModal").classList.remove("active");
 }
+
+// Priority Buttons Stay Colored
+document.querySelectorAll(".priority-option").forEach((btn) => {
+  btn.addEventListener("click", function () {
+    document
+      .querySelectorAll(".priority-option")
+      .forEach((b) => b.classList.remove("active"));
+    this.classList.add("active");
+  });
+});
 
 // Handle Add Task button (My Tasks)
 document.addEventListener("DOMContentLoaded", () => {
@@ -126,9 +134,7 @@ document.addEventListener("DOMContentLoaded", () => {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ title, completed: false }),
         });
-        await loadData();
-        populateTasks();
-        populateStats && populateStats();
+        //
       }
     });
   }
@@ -146,26 +152,6 @@ document.addEventListener("DOMContentLoaded", () => {
   if (closeModalBtn) {
     closeModalBtn.addEventListener("click", hideModal);
   }
-
-  // Modal form submit
-  const taskForm = document.getElementById("taskForm");
-  if (taskForm) {
-    taskForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const title = taskForm.querySelector('input[type="text"]').value;
-      if (!title) return;
-      await fetch("/api/tasks", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, completed: false }),
-      });
-      hideModal();
-      await loadData();
-      populateTasks();
-      populateStats && populateStats();
-      taskForm.reset();
-    });
-  }
 });
 
 //
@@ -177,9 +163,55 @@ async function loadData() {
 function initDashboard() {
   loadData().then(() => {
     populateHeader();
-    populateStats();
+    //populateStats();
     populateTasks();
   });
 }
 
 document.addEventListener("DOMContentLoaded", initDashboard);
+
+//
+
+const taskForm = document.getElementById("taskForm");
+if (taskForm) {
+  taskForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const taskName = document.getElementById("taskName").value;
+    const description = document.getElementById("description").value;
+    const taskTime = document.getElementById("taskTime").value;
+    const endTime = document.getElementById("endTime").value;
+    const dueDate = document.getElementById("dueDate").value;
+    const priorityBtn = document.querySelector(".priority-option.active");
+    const priority = priorityBtn ? priorityBtn.textContent.trim() : "Low";
+
+    const taskData = {
+      taskName,
+      description,
+      taskTime,
+      endTime,
+      dueDate,
+      priority,
+      completed: false,
+    };
+
+    const response = await fetch("/api/tasks", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(taskData),
+    });
+
+    if (response.ok) {
+      hideModal();
+      await loadData();
+      populateTasks();
+      taskForm.reset();
+      // Remove active state from priority buttons
+      taskForm
+        .querySelectorAll(".priority-option")
+        .forEach((btn) => btn.classList.remove("active"));
+    } else {
+      alert("Failed to create task.");
+    }
+  });
+}

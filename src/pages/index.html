@@ -163,6 +163,8 @@
                 <label>Task Title</label>
                 <input
                   type="text"
+                  id="taskName"
+                  name="taskName"
                   placeholder="Enter task title"
                   class="form-input"
                 />
@@ -185,6 +187,8 @@
             <div class="form-group">
               <label>Description</label>
               <textarea
+                id="description"
+                name="description"
                 rows="3"
                 placeholder="Enter task description"
                 class="form-textarea"
@@ -194,17 +198,32 @@
             <div class="form-row">
               <div class="form-group">
                 <label>Start Time</label>
-                <input type="time" id="startTime" class="form-input" />
+                <input
+                  type="time"
+                  id="taskTime"
+                  name="taskTime"
+                  class="form-input"
+                />
               </div>
 
               <div class="form-group">
                 <label>End Time</label>
-                <input type="time" id="endTime" class="form-input" />
+                <input
+                  type="time"
+                  id="endTime"
+                  name="endTime"
+                  class="form-input"
+                />
               </div>
 
               <div class="form-group">
                 <label>Due Date</label>
-                <input type="date" id="taskDueDateInput" class="form-input" />
+                <input
+                  type="date"
+                  id="dueDate"
+                  name="dueDate"
+                  class="form-input"
+                />
               </div>
             </div>
 

@@ -192,7 +192,6 @@ if (taskForm) {
       endTime,
       dueDate,
       priority,
-      completed: false,
     };
 
     const response = await fetch("/api/tasks", {

@@ -52,7 +52,18 @@ app.get("/api/users", async (req, res) => {
 // To save user tasks
 app.post("/api/tasks", async (req, res) => {
   try {
-    const task = new Task(req.body);
+    const { taskName, description, taskTime, endTime, dueDate, priority } =
+      req.body;
+    const task = new Task({
+      taskName,
+      description,
+      taskTime,
+      endTime,
+      dueDate,
+      priority,
+      completed: false,
+    });
+    //const task = new Task(req.body);
     await task.save();
     res.status(201).json(task);
   } catch (err) {
@@ -61,7 +72,7 @@ app.post("/api/tasks", async (req, res) => {
   }
 });
 
-// Add this GET route to fetch all tasks
+// To get user tasks
 app.get("/api/tasks", async (req, res) => {
   try {
     const tasks = await Task.find();

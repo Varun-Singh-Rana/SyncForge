@@ -4,3 +4,4 @@ temp/
 node_modules/
 dist/
 desktop.ini
+email_test.js

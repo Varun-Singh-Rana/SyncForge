@@ -2,12 +2,9 @@ async function fetchUserInfo() {
   try {
     const res = await fetch("/api/users");
     const users = await res.json();
-    // If your API returns an array, pick the first user
-    if (Array.isArray(users) && users.length > 0) {
-      dashboardData.username = users[0].name || "User";
-    } else if (users.name) {
-      dashboardData.username = users.name;
-    }
+    const u = Array.isArray(users) ? users[0] : users;
+    dashboardData.username = u?.name || "User";
+    currentUserId = u?._id || null;
   } catch (e) {
     dashboardData.username = "User";
   }
@@ -221,8 +218,8 @@ if (taskForm) {
 
     const taskName = document.getElementById("taskName").value;
     const description = document.getElementById("description").value;
-    const taskTime = document.getElementById("taskTime").value;
-    const endTime = document.getElementById("endTime").value;
+    const taskStartTime = document.getElementById("startTime").value;
+    const taskEndTime = document.getElementById("endTime").value;
     const dueDate = document.getElementById("dueDate").value;
     const priorityBtn = document.querySelector(".priority-option.active");
     const priority = priorityBtn ? priorityBtn.textContent.trim() : "Low";
@@ -230,10 +227,11 @@ if (taskForm) {
     const taskData = {
       taskName,
       description,
-      taskTime,
-      endTime,
+      taskStartTime,
+      taskEndTime,
       dueDate,
       priority,
+      userId: currentUserId,
     };
 
     const response = await fetch("/api/tasks", {

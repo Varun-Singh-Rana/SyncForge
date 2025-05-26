@@ -1,16 +1,69 @@
+const dashboardData = {
+  username: "User",
+  pageTitle: "History Overview",
+  stats: {
+    totalTasks: { value: 0, change: "" },
+    completed: { value: 0, change: "" },
+    inProgress: { value: 0, change: "" },
+    overdue: { value: 0, change: "" },
+  },
+  tasks: [],
+};
+
 async function fetchUserInfo() {
   try {
     const res = await fetch("/api/users");
     const users = await res.json();
-    // If your API returns an array, pick the first user
-    if (Array.isArray(users) && users.length > 0) {
-      dashboardData.username = users[0].name || "User";
-    } else if (users.name) {
-      dashboardData.username = users.name;
-    }
-  } catch (e) {
+    const u = Array.isArray(users) ? users[0] : users;
+    dashboardData.username = u?.name || "User";
+  } catch {
     dashboardData.username = "User";
   }
+}
+
+// Fetch tasks & compute stats
+async function fetchTasks() {
+  const res = await fetch("/api/tasks");
+  const tasks = await res.json();
+
+  dashboardData.stats.totalTasks.value = tasks.length;
+  dashboardData.completedTasks = tasks.filter((t) => t.completed);
+  dashboardData.myTasks = tasks.filter((t) => !t.completed);
+
+  dashboardData.stats.completed.value = dashboardData.completedTasks.length;
+  dashboardData.stats.inProgress.value = dashboardData.myTasks.length;
+  dashboardData.stats.overdue.value = tasks.filter((t) => {
+    if (!t.completed && t.dueDate) {
+      const due = new Date(t.dueDate);
+      due.setHours(0, 0, 0, 0);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      return due < today;
+    }
+    return false;
+  }).length;
+}
+
+// fetch tasks and compute stats for dashboard
+async function fetchAndComputeTasks() {
+  const res = await fetch("/api/tasks");
+  const tasks = await res.json();
+  dashboardData.tasks = tasks;
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  dashboardData.stats.total = tasks.length;
+  dashboardData.stats.completed = tasks.filter((t) => t.completed).length;
+  dashboardData.stats.inProgress = tasks.filter((t) => !t.completed).length;
+  dashboardData.stats.overdue = tasks.filter((t) => {
+    if (!t.completed && t.dueDate) {
+      const d = new Date(t.dueDate);
+      d.setHours(0, 0, 0, 0);
+      return d < today;
+    }
+    return false;
+  }).length;
 }
 
 function renderHistoryDayTasks(selectedDate) {
@@ -95,25 +148,6 @@ async function fetchTasks() {
   }
 }
 
-async function loadData() {
-  await fetchUserInfo();
-  await fetchTasks();
-}
-
-const dashboardData = {
-  username: "",
-  pageTitle: "History Overview",
-  notifications: 0,
-  stats: {
-    totalTasks: { value: "", change: "", positive: true },
-    completed: { value: "", change: "", positive: true },
-    inProgress: { value: "", change: "", positive: false },
-    overdue: { value: "", change: "", positive: false },
-  },
-  myTasks: [],
-  completedTasks: [],
-};
-
 // Utility to set text content
 function setText(id, text) {
   const el = document.getElementById(id);
@@ -131,14 +165,20 @@ function setChange(id, stat) {
   el.className = "card-change" + (stat.positive ? " positive" : " negative");
 }
 
-// Populate username and page title
-function populateHeader() {
-  setText("usernameDisplay", dashboardData.username);
-  setText("pageTitle", dashboardData.pageTitle);
-  setText(
-    "notifybell",
-    dashboardData.notifications ? dashboardData.notifications : ""
-  );
+// Populate the four stat cards
+function populateHeaderAndStats() {
+  document.getElementById("usernameDisplay").textContent =
+    dashboardData.username;
+  document.getElementById("pageTitle").textContent = dashboardData.pageTitle;
+
+  document.getElementById("totalTasksVal").textContent =
+    dashboardData.stats.total;
+  document.getElementById("completedTasksVal").textContent =
+    dashboardData.stats.completed;
+  document.getElementById("inProgressTasksVal").textContent =
+    dashboardData.stats.inProgress;
+  document.getElementById("overdueTasksVal").textContent =
+    dashboardData.stats.overdue;
 }
 
 // Populate tasks
@@ -164,6 +204,12 @@ function populateTasks() {
 }
 
 //
+async function initReport() {
+  await fetchUserInfo();
+  await fetchAndComputeTasks();
+  populateHeaderAndStats();
+}
+
 async function loadData() {
   await fetchUserInfo();
   await fetchTasks();
@@ -172,11 +218,12 @@ async function loadData() {
 function initDashboard() {
   loadData().then(() => {
     populateHeader();
-    populateStats();
+    //populateStats();
     populateTasks();
   });
 }
 
+document.addEventListener("DOMContentLoaded", initReport);
 document.addEventListener("DOMContentLoaded", initDashboard);
 
 let calMonth = new Date().getMonth();

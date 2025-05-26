@@ -13,6 +13,71 @@ async function fetchUserInfo() {
   }
 }
 
+function renderHistoryDayTasks(selectedDate) {
+  // Format to YYYY-MM-DD for comparison
+  const dayStr = selectedDate.toISOString().split("T")[0];
+
+  // Filter all tasks for the selected day
+  const dayTasks = [
+    ...dashboardData.myTasks,
+    ...dashboardData.completedTasks,
+  ].filter((t) => {
+    // If your task has dueDate as Date object or string
+    const taskDate = t.dueDate
+      ? new Date(t.dueDate).toISOString().split("T")[0]
+      : "";
+    return taskDate === dayStr;
+  });
+
+  // Set the header label if you want
+  const label = document.getElementById("selectedDayLabel");
+  if (label) {
+    label.textContent = selectedDate.toLocaleDateString(undefined, {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+  }
+
+  // Render tasks
+  const list = document.getElementById("dayTaskList");
+  if (!list) return;
+
+  if (dayTasks.length === 0) {
+    list.innerHTML = `<div class="no-tasks">No tasks for this day.</div>`;
+    return;
+  }
+
+  list.innerHTML = dayTasks
+    .map(
+      (t) => `
+      <div class="day-task-card">
+        <div class="day-task-title">
+          ${t.taskName || t.title}
+          ${
+            t.priority
+              ? `<span class="task-priority priority-${(
+                  t.priority || ""
+                ).toLowerCase()}">${t.priority}</span>`
+              : ""
+          }
+        </div>
+        <div class="day-task-meta">
+          ${
+            t.taskTime
+              ? `<span><i class="far fa-clock"></i> ${t.taskTime}</span>`
+              : ""
+          }
+          <span><i class="far fa-calendar"></i> ${
+            t.dueDate ? new Date(t.dueDate).toLocaleDateString() : ""
+          }</span>
+        </div>
+      </div>
+    `
+    )
+    .join("");
+}
+
 async function fetchTasks() {
   try {
     const res = await fetch("/api/tasks");
@@ -113,3 +178,80 @@ function initDashboard() {
 }
 
 document.addEventListener("DOMContentLoaded", initDashboard);
+
+let calMonth = new Date().getMonth();
+let calYear = new Date().getFullYear();
+let selectedDate = new Date();
+
+function initCalendar() {
+  document.getElementById("prevMonthBtn").onclick = () => {
+    calMonth--;
+    if (calMonth < 0) {
+      calMonth = 11;
+      calYear--;
+    }
+    renderCalendar();
+  };
+  document.getElementById("nextMonthBtn").onclick = () => {
+    calMonth++;
+    if (calMonth > 11) {
+      calMonth = 0;
+      calYear++;
+    }
+    renderCalendar();
+  };
+  renderCalendar();
+}
+
+function renderCalendar() {
+  const grid = document.getElementById("calendarGrid");
+  const header = document.getElementById("calendarMonthYear");
+  header.textContent = new Date(calYear, calMonth).toLocaleString(undefined, {
+    month: "long",
+    year: "numeric",
+  });
+
+  grid.innerHTML = "";
+  ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].forEach((d) => {
+    const h = document.createElement("div");
+    h.className = "calendar-day-header";
+    h.textContent = d;
+    grid.appendChild(h);
+  });
+
+  const firstDow = new Date(calYear, calMonth, 1).getDay();
+  for (let i = 0; i < firstDow; i++) {
+    const cell = document.createElement("div");
+    cell.className = "calendar-day inactive";
+    grid.appendChild(cell);
+  }
+
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+  for (let date = 1; date <= daysInMonth; date++) {
+    const cell = document.createElement("div");
+    cell.className = "calendar-day";
+    cell.textContent = date;
+
+    // highlight currently selected
+    if (
+      selectedDate.getFullYear() === calYear &&
+      selectedDate.getMonth() === calMonth &&
+      selectedDate.getDate() === date
+    ) {
+      cell.classList.add("selected");
+    }
+
+    cell.onclick = () => {
+      selectedDate = new Date(calYear, calMonth, date);
+      renderCalendar(); // re‐draw to update highlight
+      renderHistoryDayTasks(selectedDate); // show tasks
+    };
+    grid.appendChild(cell);
+  }
+}
+// Show today's tasks on page
+document.addEventListener("DOMContentLoaded", () => {
+  initDashboard();
+  initCalendar();
+  renderHistoryDayTasks(selectedDate);
+});

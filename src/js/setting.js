@@ -3,14 +3,15 @@ let currentUserId = null;
 async function fetchUserInfo() {
   const res = await fetch("/api/users");
   const users = await res.json();
-  let user = Array.isArray(users) ? users[0] : users;
-  if (user && user._id) {
-    currentUserId = user._id;
-    document.getElementById("name").value = user.name || "";
-    document.getElementById("email").value = user.email || "";
-    document.getElementById("sleepTime").value = user.sleepTime || "";
-    document.getElementById("wakeUpTime").value = user.wakeUpTime || "";
-  }
+  const user = Array.isArray(users) ? users[0] : users;
+  if (!user) return;
+
+  currentUserId = user._id;
+  dashboardData.username = user.name;
+  document.getElementById("name").value = user.name || "";
+  document.getElementById("email").value = user.email || "";
+  document.getElementById("sleepTime").value = user.sleepTime || "";
+  document.getElementById("wakeUpTime").value = user.wakeUpTime || "";
 }
 
 document

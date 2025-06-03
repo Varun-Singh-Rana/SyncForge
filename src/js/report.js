@@ -55,7 +55,16 @@ async function fetchAndComputeTasks() {
 
   dashboardData.stats.total = tasks.length;
   dashboardData.stats.completed = tasks.filter((t) => t.completed).length;
-  dashboardData.stats.inProgress = tasks.filter((t) => !t.completed).length;
+
+  dashboardData.stats.inProgress = tasks.filter((t) => {
+    if (t.completed) return false;
+    if (t.dueDate) {
+      const d = new Date(t.dueDate);
+      d.setHours(0, 0, 0, 0);
+      return d >= today;
+    }
+    return true;
+  }).length;
   dashboardData.stats.overdue = tasks.filter((t) => {
     if (!t.completed && t.dueDate) {
       const d = new Date(t.dueDate);
@@ -203,7 +212,7 @@ async function loadData() {
 function initDashboard() {
   loadData().then(() => {
     populateHeader();
-    populateStats();
+    //populateStats();
     populateTasks();
   });
 }

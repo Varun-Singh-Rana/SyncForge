@@ -11,25 +11,70 @@ async function fetchUserInfo() {
 }
 
 async function fetchTasks() {
-  try {
-    const res = await fetch("/api/tasks");
-    const tasks = await res.json();
-    dashboardData.stats.totalTasks.value = tasks.length;
-    dashboardData.myTasks = tasks.filter((t) => !t.completed);
-    dashboardData.completedTasks = tasks.filter((t) => t.completed);
-    dashboardData.stats.completed.value = dashboardData.completedTasks.length;
-    dashboardData.stats.inProgress.value = dashboardData.myTasks.length;
-    // Add overdue logic if you have due dates
-    dashboardData.stats.overdue.value = tasks.filter((t) => t.overdue).length;
-  } catch (e) {
-    dashboardData.myTasks = [];
-    dashboardData.completedTasks = [];
-  }
+  const res = await fetch("/api/tasks");
+  const tasks = await res.json();
+
+  dashboardData.stats.total = tasks.length;
+  dashboardData.completedTasks = tasks.filter((t) => t.completed);
+  dashboardData.myTasks = tasks.filter((t) => !t.completed);
+
+  dashboardData.stats.completed = dashboardData.completedTasks.length;
+  dashboardData.stats.inProgress = dashboardData.myTasks.length;
+  dashboardData.stats.overdue = tasks.filter((t) => {
+    if (!t.completed && t.dueDate) {
+      const due = new Date(t.dueDate);
+      due.setHours(0, 0, 0, 0);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      return due < today;
+    }
+    return false;
+  }).length;
 }
 
-async function loadData() {
-  await fetchUserInfo();
-  await fetchTasks();
+async function fetchAndComputeTasks() {
+  const res = await fetch("/api/tasks");
+  const tasks = await res.json();
+  dashboardData.tasks = tasks;
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  dashboardData.stats.total = tasks.length;
+  dashboardData.stats.completed = tasks.filter((t) => t.completed).length;
+
+  dashboardData.stats.inProgress = tasks.filter((t) => {
+    if (t.completed) return false;
+    if (t.dueDate) {
+      const d = new Date(t.dueDate);
+      d.setHours(0, 0, 0, 0);
+      return d >= today;
+    }
+    return true;
+  }).length;
+  dashboardData.stats.overdue = tasks.filter((t) => {
+    if (!t.completed && t.dueDate) {
+      const d = new Date(t.dueDate);
+      d.setHours(0, 0, 0, 0);
+      return d < today;
+    }
+    return false;
+  }).length;
+}
+
+function populateHeaderAndStats() {
+  document.getElementById("usernameDisplay").textContent =
+    dashboardData.username;
+  document.getElementById("pageTitle").textContent = dashboardData.pageTitle;
+
+  document.getElementById("totalTasksVal").textContent =
+    dashboardData.stats.total;
+  document.getElementById("completedTasksVal").textContent =
+    dashboardData.stats.completed;
+  document.getElementById("inProgressTasksVal").textContent =
+    dashboardData.stats.inProgress;
+  document.getElementById("overdueTasksVal").textContent =
+    dashboardData.stats.overdue;
 }
 
 const dashboardData = {
@@ -37,10 +82,10 @@ const dashboardData = {
   pageTitle: "Dashboard Overview",
   notifications: 0,
   stats: {
-    totalTasks: { value: "", change: "", positive: true },
-    completed: { value: "", change: "", positive: true },
-    inProgress: { value: "", change: "", positive: false },
-    overdue: { value: "", change: "", positive: false },
+    totalTasks: { value: 0, change: "", positive: true },
+    completed: { value: 0, change: "", positive: true },
+    inProgress: { value: 0, change: "", positive: false },
+    overdue: { value: 0, change: "", positive: false },
   },
   myTasks: [],
   completedTasks: [],
@@ -194,6 +239,12 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 //
+async function initReport() {
+  await fetchUserInfo();
+  await fetchAndComputeTasks();
+  populateHeaderAndStats();
+}
+
 async function loadData() {
   await fetchUserInfo();
   await fetchTasks();
@@ -207,6 +258,7 @@ function initDashboard() {
   });
 }
 
+document.addEventListener("DOMContentLoaded", initReport);
 document.addEventListener("DOMContentLoaded", initDashboard);
 
 //

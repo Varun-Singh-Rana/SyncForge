@@ -55,7 +55,16 @@ async function fetchAndComputeTasks() {
 
   dashboardData.stats.total = tasks.length;
   dashboardData.stats.completed = tasks.filter((t) => t.completed).length;
-  dashboardData.stats.inProgress = tasks.filter((t) => !t.completed).length;
+
+  dashboardData.stats.inProgress = tasks.filter((t) => {
+    if (t.completed) return false;
+    if (t.dueDate) {
+      const d = new Date(t.dueDate);
+      d.setHours(0, 0, 0, 0);
+      return d >= today;
+    }
+    return true;
+  }).length;
   dashboardData.stats.overdue = tasks.filter((t) => {
     if (!t.completed && t.dueDate) {
       const d = new Date(t.dueDate);
@@ -68,7 +77,12 @@ async function fetchAndComputeTasks() {
 
 function renderHistoryDayTasks(selectedDate) {
   // Format to YYYY-MM-DD for comparison
-  const dayStr = selectedDate.toISOString().split("T")[0];
+  const dayStr =
+    selectedDate.getFullYear() +
+    "-" +
+    String(selectedDate.getMonth() + 1).padStart(2, "0") +
+    "-" +
+    String(selectedDate.getDate()).padStart(2, "0");
 
   // Filter all tasks for the selected day
   const dayTasks = [
@@ -77,7 +91,16 @@ function renderHistoryDayTasks(selectedDate) {
   ].filter((t) => {
     // If your task has dueDate as Date object or string
     const taskDate = t.dueDate
-      ? new Date(t.dueDate).toISOString().split("T")[0]
+      ? (() => {
+          const d = new Date(t.dueDate);
+          return (
+            d.getFullYear() +
+            "-" +
+            String(d.getMonth() + 1).padStart(2, "0") +
+            "-" +
+            String(d.getDate()).padStart(2, "0")
+          );
+        })()
       : "";
     return taskDate === dayStr;
   });
@@ -122,7 +145,21 @@ function renderHistoryDayTasks(selectedDate) {
               : ""
           }
           <span><i class="far fa-calendar"></i> ${
-            t.dueDate ? new Date(t.dueDate).toLocaleDateString() : ""
+            t.dueDate
+              ? new Date(t.dueDate).toLocaleDateString(undefined, {
+                  day: "numeric",
+                  month: "short",
+                  year: "numeric",
+                })
+              : ""
+          }</span>
+          <span><i class="far fa-clock"></i> ${
+            t.dueDate
+              ? new Date(t.dueDate).toLocaleTimeString(undefined, {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })
+              : ""
           }</span>
         </div>
       </div>
@@ -259,14 +296,15 @@ function renderCalendar() {
   });
 
   grid.innerHTML = "";
-  ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].forEach((d) => {
+  ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].forEach((d) => {
     const h = document.createElement("div");
     h.className = "calendar-day-header";
     h.textContent = d;
     grid.appendChild(h);
   });
 
-  const firstDow = new Date(calYear, calMonth, 1).getDay();
+  let firstDow = new Date(calYear, calMonth, 1).getDay(); // 0=Sun, 1=Mon, ...
+  firstDow = (firstDow + 6) % 7;
   for (let i = 0; i < firstDow; i++) {
     const cell = document.createElement("div");
     cell.className = "calendar-day inactive";

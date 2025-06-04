@@ -139,28 +139,25 @@ function renderHistoryDayTasks(selectedDate) {
           }
         </div>
         <div class="day-task-meta">
+          <span>
+            <i class="far fa-calendar"></i>
+            ${
+              t.dueDate
+                ? new Date(t.dueDate).toLocaleDateString(undefined, {
+                    day: "numeric",
+                    month: "short",
+                    year: "numeric",
+                  })
+                : ""
+            }
+          </span>
           ${
-            t.taskTime
-              ? `<span><i class="far fa-clock"></i> ${t.taskTime}</span>`
+            t.taskStartTime || t.taskEndTime
+              ? `<span><i class="far fa-clock"></i> ${
+                  t.taskStartTime ? t.taskStartTime : ""
+                }${t.taskEndTime ? " - " + t.taskEndTime : ""}</span>`
               : ""
           }
-          <span><i class="far fa-calendar"></i> ${
-            t.dueDate
-              ? new Date(t.dueDate).toLocaleDateString(undefined, {
-                  day: "numeric",
-                  month: "short",
-                  year: "numeric",
-                })
-              : ""
-          }</span>
-          <span><i class="far fa-clock"></i> ${
-            t.dueDate
-              ? new Date(t.dueDate).toLocaleTimeString(undefined, {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })
-              : ""
-          }</span>
         </div>
       </div>
     `
@@ -250,6 +247,8 @@ async function initReport() {
 async function loadData() {
   await fetchUserInfo();
   await fetchTasks();
+  populateTasks();
+  populateCompletedTasks();
 }
 
 function initDashboard() {

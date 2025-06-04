@@ -147,18 +147,30 @@ function renderCharts() {
       d.toLocaleDateString(undefined, { month: "short", day: "numeric" })
     );
 
-    const dayTasks = dashboardData.tasks.filter((t) =>
-      t.dueDate?.startsWith(dayKey)
-    );
-    const c = dayTasks.filter((t) => t.completed).length;
-    const over = dayTasks.filter(
-      (t) => !t.completed && new Date(t.dueDate) < now
+    // Completed: tasks completed on this day
+    const completedCount = dashboardData.tasks.filter(
+      (t) =>
+        t.completed &&
+        t.completedAt &&
+        new Date(t.completedAt).toISOString().split("T")[0] === dayKey
     ).length;
-    const inProg = dayTasks.length - c - over;
 
-    comp.push(c);
-    ip.push(inProg);
-    ov.push(over);
+    // In Progress: tasks due on this day, not completed
+    const inProgressCount = dashboardData.tasks.filter(
+      (t) =>
+        !t.completed &&
+        t.dueDate &&
+        new Date(t.dueDate).toISOString().split("T")[0] === dayKey
+    ).length;
+
+    // Overdue: tasks due before this day, not completed
+    const overdueCount = dashboardData.tasks.filter(
+      (t) => !t.completed && t.dueDate && new Date(t.dueDate) < d
+    ).length;
+
+    comp.push(completedCount);
+    ip.push(inProgressCount);
+    ov.push(overdueCount);
   }
 
   new Chart(lineCtx, {

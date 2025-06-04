@@ -329,6 +329,62 @@ body {
   color: var(--danger);
 }
 
+/* Custom Modal Styles */
+.custom-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(30, 34, 90, 0.18);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.custom-modal-content {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(60, 60, 120, 0.18);
+  padding: 2.5rem 2rem 2rem 2rem;
+  min-width: 320px;
+  text-align: center;
+}
+.custom-modal-content h2 {
+  margin-top: 0;
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+.custom-modal-content p {
+  margin: 1.2rem 0 2rem 0;
+  font-size: 1.1rem;
+}
+.custom-modal-content button {
+  background: #6c63ff;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.7rem 2.2rem;
+  margin: 0 0.7rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.custom-modal-content button:hover {
+  background: #554ee2;
+}
+
+/* Checkbox styling for task list */
+.task-checkbox input[type="checkbox"] {
+  width: 1.2em;
+  height: 1.2em;
+  accent-color: #6c63ff;
+  cursor: pointer;
+  margin-right: 0.7em;
+  vertical-align: middle;
+}
+
 /* Task Sections */
 .task-sections {
   display: grid;
@@ -461,6 +517,64 @@ body {
   color: #888;
   margin: 24px 0;
   font-size: 16px;
+}
+
+.task-card.completed {
+  background: #f8f9fd;
+  border-left: 4px solid #6c63ff;
+  border-radius: 12px;
+  margin-bottom: 1.2rem;
+  padding: 1.1rem 1.5rem 1.1rem 1.2rem;
+  box-shadow: 0 2px 8px rgba(60, 60, 120, 0.06);
+  transition: box-shadow 0.2s;
+}
+.task-card.completed:hover {
+  box-shadow: 0 4px 16px rgba(60, 60, 120, 0.13);
+}
+.task-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+.task-title {
+  font-size: 1.13rem;
+  font-weight: 600;
+  color: #23234f;
+}
+.task-priority {
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 0.22em 0.9em;
+  border-radius: 8px;
+  margin-left: 0.7em;
+  background: #e6f7e6;
+  color: #2e7d32;
+  text-transform: capitalize;
+  letter-spacing: 0.5px;
+}
+.task-priority.low {
+  background: #e6f7e6;
+  color: #2e7d32;
+}
+.task-priority.medium {
+  background: #fffbe6;
+  color: #b59f00;
+}
+.task-priority.high {
+  background: #ffeaea;
+  color: #d32f2f;
+}
+.task-meta {
+  color: #6b6b8a;
+  font-size: 0.98rem;
+  margin-top: 0.2rem;
+  display: flex;
+  align-items: center;
+}
+.task-meta i {
+  margin-right: 0.4em;
+  color: #6c63ff;
 }
 
 /* Modal */

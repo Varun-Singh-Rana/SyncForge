@@ -106,6 +106,25 @@ app.get("/api/tasks", async (req, res) => {
   }
 });
 
+// To update task completion
+app.put("/api/tasks/:id", async (req, res) => {
+  try {
+    const updated = await Task.findByIdAndUpdate(
+      req.params.id,
+      {
+        $set: {
+          completed: req.body.completed,
+          completedAt: req.body.completed ? new Date() : null,
+        },
+      },
+      { new: true }
+    );
+    res.json(updated);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

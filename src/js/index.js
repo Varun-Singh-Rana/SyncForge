@@ -118,6 +118,81 @@ function populateHeader() {
   );
 }
 
+function getMondayOfThisWeek(date = new Date()) {
+  const d = new Date(date);
+  const day = d.getDay(); // 0 (Sun) - 6 (Sat)
+  const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+  d.setDate(diff);
+  d.setHours(0, 0, 0, 0);
+  return d;
+}
+
+function populateCompletedTasks() {
+  const completedList = document.getElementById("teamTasksList");
+  completedList.innerHTML = "";
+
+  // Only show tasks completed since this week's Monday
+  const monday = getMondayOfThisWeek();
+  const recentCompleted = dashboardData.completedTasks.filter((task) => {
+    if (!task.completedAt) return false;
+    const completedAt = new Date(task.completedAt);
+    // Compare only the date part to avoid timezone issues
+    const completedDate = new Date(
+      completedAt.getFullYear(),
+      completedAt.getMonth(),
+      completedAt.getDate()
+    );
+    const mondayDate = new Date(
+      monday.getFullYear(),
+      monday.getMonth(),
+      monday.getDate()
+    );
+    return completedDate >= mondayDate;
+  });
+
+  if (!recentCompleted.length) {
+    completedList.innerHTML = `<div class="no-task-msg">No tasks completed.</div>`;
+    return;
+  }
+
+  recentCompleted.forEach((task) => {
+    const completedAt = task.completedAt ? new Date(task.completedAt) : null;
+    const priorityClass = task.priority ? task.priority.toLowerCase() : "low";
+    completedList.innerHTML += `
+    <div class="task-card completed">
+      <div class="task-title-row">
+        <span class="task-title">${task.taskName}</span>
+        <span class="task-priority ${priorityClass}">${
+      task.priority || "Low"
+    }</span>
+      </div>
+      <div class="task-meta">
+        <span>
+          <i class="fas fa-calendar-check"></i>
+          Completed: ${
+            completedAt
+              ? completedAt.toLocaleDateString(undefined, {
+                  day: "numeric",
+                  month: "short",
+                  year: "numeric",
+                })
+              : "—"
+          }
+          ${
+            completedAt
+              ? completedAt.toLocaleTimeString(undefined, {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })
+              : ""
+          }
+        </span>
+      </div>
+    </div>
+  `;
+  });
+}
+
 // Populate tasks
 function populateTasks() {
   const myTasksList = document.getElementById("myTasksList");
@@ -138,49 +213,102 @@ function populateTasks() {
     );
   });
 
+  // Sort: today's first, then tomorrow's
+  filteredTasks.sort((a, b) => {
+    const aDate = new Date(a.dueDate);
+    aDate.setHours(0, 0, 0, 0);
+    const bDate = new Date(b.dueDate);
+    bDate.setHours(0, 0, 0, 0);
+    return aDate - bDate;
+  });
+
   if (filteredTasks.length === 0) {
     myTasksList.innerHTML = `<div class="no-task-msg">No tasks for today or tomorrow.</div>`;
+    teamTasksList.innerHTML = `<div class="no-task-msg">No tasks is Completed.</div>`;
     return;
   }
 
   filteredTasks.forEach((task) => {
     const dueDate = new Date(task.dueDate);
     let dueLabel = "";
-    const diffDays = Math.ceil((dueDate - today) / (1000 * 60 * 60 * 24));
+    const diffDays = Math.round((dueDate - today) / (1000 * 60 * 60 * 24));
     if (diffDays === 1) dueLabel = "Due tomorrow";
     else if (diffDays === 0) dueLabel = "Due today";
 
     const priorityClass = task.priority ? task.priority.toLowerCase() : "low";
-    const timeRange =
-      task.taskTime && task.endTime
-        ? `${task.taskTime}–${task.endTime}`
-        : task.taskTime || "";
 
     const div = document.createElement("div");
     div.className = "task-card";
     div.innerHTML = `
-      <div class="task-header">
-        <span class="task-badge">${
-          dueLabel === "Due tomorrow" ? "Tomorrow's Task" : "Today's Task"
-        }</span>
-        <span class="task-priority ${priorityClass}">${task.priority}</span>
-      </div>
-      <div class="task-body">
-        <label class="task-checkbox">
-          <input type="checkbox" ${task.completed ? "checked" : ""} />
-        </label>
-        <div class="task-info">
-          <div class="task-title">${task.taskName}</div>
-          <div class="task-meta">
-            <span class="task-time"><i class="fas fa-clock"></i> ${timeRange}</span>
-            <span class="task-due"><i class="fas fa-calendar-alt"></i> ${dueLabel}</span>
-          </div>
+    <div class="task-header">
+      <span class="task-badge">${
+        dueLabel === "Due tomorrow" ? "Tomorrow's Task" : "Today's Task"
+      }</span>
+      <span class="task-priority ${priorityClass}">${task.priority}</span>
+    </div>
+    <div class="task-body">
+      <label class="task-checkbox">
+        <input type="checkbox" data-task-id="${task._id}" ${
+      task.completed ? "checked" : ""
+    } />
+      </label>
+      <div class="task-info">
+        <div class="task-title">${task.taskName}</div>
+        <div class="task-meta">
+          <span class="task-time">
+            <i class="fas fa-clock"></i>
+            ${dueDate.toLocaleTimeString(undefined, {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
+          </span>
+          <span class="task-date">
+            <i class="fas fa-calendar-alt"></i>
+            ${dueDate.toLocaleDateString(undefined, {
+              day: "numeric",
+              month: "short",
+              year: "numeric",
+            })}
+          </span>
+          <span class="task-due">${dueLabel}</span>
         </div>
       </div>
-    `;
+    </div>
+  `;
+    // ...inside filteredTasks.forEach...
     myTasksList.appendChild(div);
+
+    // Add event listener for the checkbox
+    const checkbox = div.querySelector('input[type="checkbox"]');
+    if (checkbox) {
+      checkbox.addEventListener("change", async function () {
+        if (checkbox.checked) {
+          // Show confirmation dialog
+          const confirmed = await showCompleteTaskDialog();
+          if (confirmed) {
+            // Update in MongoDB
+            await fetch(`/api/tasks/${task._id}`, {
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                completed: true,
+                completedAt: new Date(),
+              }),
+            });
+            // Force reload of all data and both lists
+            await loadData();
+            populateTasks();
+            populateCompletedTasks();
+          } else {
+            checkbox.checked = false;
+          }
+        }
+      });
+    }
   });
 }
+
+console.log("Task marked as completed, data reloaded:", dashboardData);
 
 function showModal() {
   document.getElementById("taskModal").classList.add("active");
@@ -248,13 +376,15 @@ async function initReport() {
 async function loadData() {
   await fetchUserInfo();
   await fetchTasks();
+  populateTasks();
+  populateCompletedTasks();
 }
 
 function initDashboard() {
   loadData().then(() => {
     populateHeader();
     //populateStats();
-    populateTasks();
+    //populateTasks();
   });
 }
 
@@ -296,6 +426,7 @@ if (taskForm) {
       hideModal();
       await loadData();
       populateTasks();
+      populateCompletedTasks();
       taskForm.reset();
       // Remove active state from priority buttons
       taskForm
@@ -304,5 +435,31 @@ if (taskForm) {
     } else {
       alert("Failed to create task.");
     }
+  });
+}
+
+async function showCompleteTaskDialog() {
+  return new Promise((resolve) => {
+    // Create modal
+    const modal = document.createElement("div");
+    modal.className = "custom-modal";
+    modal.innerHTML = `
+      <div class="custom-modal-content">
+        <h2>Complete Task</h2>
+        <p>Did you complete this task?</p>
+        <button id="modalYesBtn">Yes</button>
+        <button id="modalNoBtn">No</button>
+      </div>
+    `;
+    document.body.appendChild(modal);
+
+    modal.querySelector("#modalYesBtn").onclick = () => {
+      document.body.removeChild(modal);
+      resolve(true);
+    };
+    modal.querySelector("#modalNoBtn").onclick = () => {
+      document.body.removeChild(modal);
+      resolve(false);
+    };
   });
 }

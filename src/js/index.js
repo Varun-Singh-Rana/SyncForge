@@ -286,10 +286,13 @@ function populateTasks() {
         <div class="task-meta">
           <span class="task-time">
             <i class="fas fa-clock"></i>
-            ${dueDate.toLocaleTimeString(undefined, {
-              hour: "2-digit",
-              minute: "2-digit",
-            })}
+            ${
+              task.taskStartTime || task.taskEndTime
+                ? `${task.taskStartTime ? task.taskStartTime : ""}${
+                    task.taskEndTime ? " - " + task.taskEndTime : ""
+                  }`
+                : ""
+            }
           </span>
           <span class="task-date">
             <i class="fas fa-calendar-alt"></i>

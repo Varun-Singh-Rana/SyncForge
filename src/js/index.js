@@ -91,6 +91,35 @@ const dashboardData = {
   completedTasks: [],
 };
 
+function isTaskTimePassed(task) {
+  if (!task.taskEndTime) return false; // If no end time, always show
+  const now = new Date();
+  const dueDate = new Date(task.dueDate);
+  // Parse end time (assume "HH:mm" 24h format)
+  const [endHour, endMinute] = task.taskEndTime.split(":").map(Number);
+  dueDate.setHours(endHour, endMinute, 0, 0);
+  return now > dueDate;
+}
+
+function updateNotificationCount() {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const tasks = dashboardData.tasks || [];
+  const count = tasks.filter((task) => {
+    if (!task.dueDate || task.completed) return false;
+    const dueDate = new Date(task.dueDate);
+    dueDate.setHours(0, 0, 0, 0);
+    return dueDate.getTime() === today.getTime() && !isTaskTimePassed(task);
+  }).length;
+
+  const badge = document.getElementById("notifybell");
+  if (badge) {
+    badge.style.display = count > 0 ? "flex" : "none";
+    badge.textContent = count > 0 ? count : "";
+  }
+}
+
 // Utility to set text content
 function setText(id, text) {
   const el = document.getElementById(id);
@@ -364,7 +393,66 @@ document.addEventListener("DOMContentLoaded", () => {
   if (closeModalBtn) {
     closeModalBtn.addEventListener("click", hideModal);
   }
+
+  const bellBtn = document.querySelector(".notification");
+  const dropdown = document.getElementById("notificationDropdown");
+  const dropdownList = document.getElementById("notificationTaskList");
+
+  if (bellBtn && dropdown && dropdownList) {
+    bellBtn.addEventListener("click", () => {
+      // Toggle dropdown
+      dropdown.style.display =
+        dropdown.style.display === "none" ? "block" : "none";
+      if (dropdown.style.display === "block") {
+        showTodayTasksInDropdown();
+      }
+    });
+
+    // Hide dropdown when clicking outside
+    document.addEventListener("click", (e) => {
+      if (!bellBtn.contains(e.target) && !dropdown.contains(e.target)) {
+        dropdown.style.display = "none";
+      }
+    });
+  }
 });
+
+function showTodayTasksInDropdown() {
+  const dropdownList = document.getElementById("notificationTaskList");
+  dropdownList.innerHTML = "";
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const tasks = dashboardData.myTasks.filter((task) => {
+    if (!task.dueDate || task.completed) return false;
+    const dueDate = new Date(task.dueDate);
+    dueDate.setHours(0, 0, 0, 0);
+    // Only today's tasks and not overdue
+    return dueDate.getTime() === today.getTime() && !isTaskTimePassed(task);
+  });
+
+  if (tasks.length === 0) {
+    dropdownList.innerHTML = `<div class="dropdown-task">No tasks for today.</div>`;
+    return;
+  }
+
+  tasks.forEach((task) => {
+    dropdownList.innerHTML += `
+      <div class="dropdown-task">
+        <div class="dropdown-task-title">${task.taskName}</div>
+        <div class="dropdown-task-meta">
+          ${
+            task.taskStartTime
+              ? `<i class="fas fa-clock"></i> ${task.taskStartTime}`
+              : ""
+          }
+          ${task.description ? `<br>${task.description}` : ""}
+        </div>
+      </div>
+    `;
+  });
+}
 
 //
 async function initReport() {
@@ -376,6 +464,7 @@ async function initReport() {
 async function loadData() {
   await fetchUserInfo();
   await fetchTasks();
+  updateNotificationCount();
   populateTasks();
   populateCompletedTasks();
 }
@@ -383,6 +472,7 @@ async function loadData() {
 function initDashboard() {
   loadData().then(() => {
     populateHeader();
+    updateNotificationCount();
     //populateStats();
     //populateTasks();
   });

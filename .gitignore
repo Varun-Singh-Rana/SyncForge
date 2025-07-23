@@ -1,7 +1,0 @@
-.vscode/
-temp/
-.env
-node_modules/
-dist/
-desktop.ini
-email_test.js

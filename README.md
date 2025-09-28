@@ -59,3 +59,35 @@ Open your browser and navigate to the local server (e.g., http://localhost:3000)
 > Contributions are welcome! Please feel free to submit issues or pull requests.
 
 ---
+### **Screenshots**
+Login:
+<br>
+<img src="screenshots/image5.png" alt="Loaginpage Screenshot" width="600"/>
+<br>
+Dashboard:
+<br>
+<img src="screenshots/image6.png" width="600"/>
+<br>
+History:
+<br>
+<img src="screenshots/image7.png" width="600"/>
+<br>
+Reports:
+<br>
+<img src="screenshots/image8.png" width="600"/>
+<br>
+Settings:
+<br>
+<img src="screenshots/image9.png" width="600"/>
+<br>
+Email:
+<br>
+<img src="screenshots/image10.png" width="600"/>
+<br>
+Database:
+<br>
+<img src="screenshots/image11.png" width="600"/>
+<img src="screenshots/image12.png" width="600"/>
+
+
+
